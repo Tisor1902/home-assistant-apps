@@ -14,7 +14,7 @@ https://github.com/Tisor1902/home-assistant-apps
 
 Alternativ: [Repository in Home Assistant hinzufügen](https://my.home-assistant.io/redirect/supervisor_addon_repository/?repository=https%3A%2F%2Fgithub.com%2FTisor1902%2Fhome-assistant-apps).
 
-Danach „Goon Calendar Sync“ auswählen und installieren. HA lädt das versionierte Image `ghcr.io/tisor1902/goon-calendar-sync-ha:0.1.1`. Kein GitHub-Token und kein lokaler Build erforderlich. **Noch nicht starten**, wenn eine bisherige Instanz denselben Kalender verwaltet. Vorher die Daten übernehmen und die alte Instanz stoppen.
+Danach „Goon Calendar Sync“ auswählen und installieren. HA lädt das versionierte Image `ghcr.io/tisor1902/goon-calendar-sync-ha:0.1.2`. Kein GitHub-Token und kein lokaler Build erforderlich. **Noch nicht starten**, wenn eine bisherige Instanz denselben Kalender verwaltet. Vorher die Daten übernehmen und die alte Instanz stoppen.
 
 Beim ersten Veröffentlichen muss das GHCR-Paket separat auf **Public** gestellt und anonymes Herunterladen geprüft werden; die Sichtbarkeit des Repositorys allein genügt nicht.
 
@@ -22,7 +22,7 @@ Die vollständige Installations- und Umzugsanleitung steht in [goon_calendar_syn
 
 ## Lokales Paket als Alternative
 
-Die Release-Datei `goon-ha-local-0.1.1-58f2a07.tar.gz` kann weiterhin als lokale App installiert werden. HA baut sie selbst; Internet für das öffentliche Playwright-Basisimage und npm-Abhängigkeiten wird benötigt. Der Export entfernt dazu bewusst den `image`-Verweis aus der App-Konfiguration.
+Die Release-Datei `goon-ha-local-0.1.2-58f2a07.tar.gz` kann weiterhin als lokale App installiert werden. HA baut sie selbst; Internet für das öffentliche Playwright-Basisimage und npm-Abhängigkeiten wird benötigt. Der Export entfernt dazu bewusst den `image`-Verweis aus der App-Konfiguration.
 
 Das Paket enthält nur freigegebene Code-Dateien des fixierten Core-Commits und die HA-Verpackung. Keine Datenbank, keine echten Passwörter oder Tokens, keine Git-Historie. Ältere Release-Pakete bleiben als reproduzierbare Quellstände bestehen.
 
@@ -38,7 +38,7 @@ Ergebnis: versioniertes Paket in `dist/` mit SHA-256-Prüfsumme. Bereits vorhand
 ## Daten und Sicherheit
 
 - Dauerhafte Daten im HA-App-Verzeichnis `/data`, inklusive Google-Verbindungen und Kalender-Zuordnungen.
-- Anmeldung der Weboberfläche bleibt zwingend aktiv, Web-Passwort mindestens 12 Zeichen.
+- Anmeldung der Weboberfläche bleibt zwingend aktiv. Das eigene Web-Passwort hat keine Längenvorgabe, darf aber nicht leer sein oder Steuerzeichen enthalten.
 - Port standardmäßig `8098`, aktuell kein Ingress. HTTP nur im vertrauenswürdigen LAN/VPN; nicht zum Internet freigeben.
 - Zugangsdaten in HA konfigurieren, niemals per Chat oder GitHub. HA speichert Optionen in `/data/options.json`; HA-Backups und Datenbank enthalten ebenfalls Zugangsdaten und müssen geschützt werden.
 - Keine HA-/Supervisor-/Docker-API, kein Host-Netzwerk, keine zusätzlichen Linux-Capabilities. Schutzmodus und AppArmor bleiben an.

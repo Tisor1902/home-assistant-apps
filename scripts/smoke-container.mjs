@@ -6,14 +6,15 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { setTimeout } from "node:timers/promises";
 
-const image = process.argv[2] || "goon-ha:0.1.1";
+const image = process.argv[2] || "goon-ha:0.1.2";
 const directory = mkdtempSync(join(tmpdir(), "goon-ha-smoke-"));
 const data = join(directory, "data"), config = join(directory, "config");
 mkdirSync(data, { mode: 0o700 });
 mkdirSync(config, { mode: 0o700 });
 const options = {
   godo_username: "synthetic-user", godo_password: randomBytes(24).toString("hex"),
-  app_username: "admin", app_password: randomBytes(24).toString("hex"),
+  // Intentionally below the former 12-character minimum: exercise real login.
+  app_username: "admin", app_password: randomBytes(4).toString("hex"),
   active_instance: false, automatic_check_enabled: false,
 };
 const prefix = `goon-ha-smoke-${randomBytes(6).toString("hex")}`;

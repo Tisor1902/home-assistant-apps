@@ -40,6 +40,8 @@ test("HA defaults: amd64, manual startup, cold backup, auth, least privilege", a
   assert.equal(config.options.active_instance, false);
   assert.equal(config.options.automatic_check_interval_minutes, 720);
   assert.deepEqual(config.map, [{ type: "addon_config", read_only: true }]);
+  assert.equal(config.schema.app_password, "password");
+  assert.equal(config.options.app_password, "");
   assert.equal(config.image, "ghcr.io/tisor1902/goon-calendar-sync-ha");
   for (const forbidden of ["privileged", "full_access", "host_network", "host_pid", "host_ipc", "docker_api", "hassio_api", "homeassistant_api", "ingress"]) {
     assert.equal(config[forbidden], undefined, forbidden);
@@ -47,6 +49,7 @@ test("HA defaults: amd64, manual startup, cold backup, auth, least privilege", a
   const translations = JSON.parse(await text("../goon_calendar_sync/translations/de.json"));
   assert.deepEqual(Object.keys(config.options).sort(), Object.keys(config.schema).sort());
   assert.deepEqual(Object.keys(config.schema).sort(), Object.keys(translations.configuration).sort());
+  assert.match(translations.configuration.app_password.description, /Keine Längenvorgabe/);
 });
 
 test("wrapper pins exactly the recorded core commit", async () => {
@@ -74,7 +77,7 @@ test("options map valid defaults, never allow source or authentication overrides
 });
 
 for (const [field, bad] of [
-  ["godo_username", ""], ["godo_password", "x\ny"], ["app_password", "short"], ["app_username", "a:b"],
+  ["godo_username", ""], ["godo_password", "x\ny"], ["app_password", ""], ["app_username", "a:b"],
   ["timezone", "Invalid/Synthetic"], ["active_instance", "true"], ["automatic_check_enabled", 1],
   ["automatic_check_interval_minutes", 14], ["automatic_check_interval_minutes", 10081],
   ["automatic_check_interval_minutes", 720.5], ["automatic_past_months", -1], ["automatic_future_months", 25],
@@ -85,6 +88,24 @@ for (const [field, bad] of [
     assert.throws(() => validateOptions({ ...valid, [field]: bad }), error => error.message.startsWith(field + ":") && !error.message.includes("synthetic-secret"));
   });
 }
+
+test("web password accepts one character, short values and values beyond the former length cap", () => {
+  for (const password of ["x", "kurz", "x".repeat(11), "x".repeat(12), "x".repeat(5000), "  x  "]) {
+    const options = parseOptions(JSON.stringify({ ...valid, app_password: password }));
+    assert.equal(options.app_password, password.trim());
+    assert.equal(environmentFor(options, { dataDirectory: "/data", secretFiles: {} }).APP_AUTH_DISABLED, "false");
+  }
+});
+
+test("web password remains required and errors never disclose supplied values", () => {
+  for (const password of [undefined, null, false, 123, "", "   "]) {
+    assert.throws(() => validateOptions({ ...valid, app_password: password }), /app_password: Bitte ein Passwort/);
+  }
+  for (const control of ["\u0000", "\t", "\n", "\r", "\u007f"]) {
+    assert.throws(() => validateOptions({ ...valid, app_password: "synthetic-hidden-value" + control }), error =>
+      error.message.startsWith("app_password:") && /Steuerzeichen/.test(error.message) && !error.message.includes("synthetic-hidden-value"));
+  }
+});
 
 test("HTTPS origin and loopback OAuth configurations work", () => {
   for (const url of ["https://calendar.example.test/", "http://localhost:8098", "http://127.0.0.1:8098", "http://[::1]:8098"]) {
@@ -115,6 +136,17 @@ test("secrets use private temporary files, auth is on and cleanup removes only o
   assert.equal(await readFile(filename, "utf8"), valid.app_password);
   await result.cleanup();
   assert.deepEqual(await readdir(directory), ["options.json"]);
+});
+
+test("one-character web password reaches the private credential file unchanged", async t => {
+  const directory = await fixture(t);
+  await writeFile(join(directory, "options.json"), JSON.stringify({ ...valid, app_password: "x" }));
+  const result = await prepare({ dataDirectory: directory, configDirectory: directory, temporaryDirectory: directory });
+  try {
+    assert.equal(result.environment.APP_AUTH_DISABLED, "false");
+    assert.equal(await readFile(result.environment.APP_PASSWORD_FILE, "utf8"), "x");
+    assert.equal((await stat(result.environment.APP_PASSWORD_FILE)).mode & 0o777, 0o600);
+  } finally { await result.cleanup(); }
 });
 
 test("SQLite backup includes committed WAL data and produces standalone private snapshot", async t => {

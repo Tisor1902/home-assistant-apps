@@ -3,7 +3,7 @@
     "godo_username": { "name": "Goon-Benutzername", "description": "Nur in HA eingeben, nicht in Chats oder GitHub." },
     "godo_password": { "name": "Goon-Passwort" },
     "app_username": { "name": "Benutzername für die Weboberfläche" },
-    "app_password": { "name": "Passwort für die Weboberfläche", "description": "Mindestens 12 Zeichen. Eigenes Passwort, unabhängig von Goon." },
+    "app_password": { "name": "Passwort für die Weboberfläche", "description": "Eigenes Passwort, unabhängig von Goon. Keine Längenvorgabe; darf nicht leer sein. Keine Zeilenumbrüche, Tabs oder anderen Steuerzeichen. Die Anmeldung bleibt erforderlich." },
     "active_instance": { "name": "Bisherige Sync-Instanz gestoppt", "description": "Erst einschalten, nachdem der Container auf dem Laptop gestoppt ist. Kalender können sofort beim Start synchronisiert werden. Keine automatische Erkennung anderer Instanzen." },
     "timezone": { "name": "Zeitzone" },
     "automatic_check_enabled": { "name": "Automatischer Abruf (Startwert)", "description": "Ein bereits in der Goon-Weboberfläche gespeicherter Abrufplan hat Vorrang." },

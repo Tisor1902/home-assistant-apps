@@ -1,6 +1,6 @@
 {
   "name": "Goon Calendar Sync",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "slug": "goon_calendar_sync",
   "description": "Verifizierter Goon-Dienstplan mit Google-Kalender- und CalDAV-Synchronisation.",
   "url": "https://github.com/Tisor1902/home-assistant-apps",

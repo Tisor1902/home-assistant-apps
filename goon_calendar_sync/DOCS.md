@@ -16,10 +16,10 @@ Die App-ID ist bei Repository-Installation `<Repository-Hash>_goon_calendar_sync
 
 Zugriff auf den HA-Ordner `addons` über Samba oder SSH. Aktuelle Samba-Versionen nennen die Freigaben `local_apps` und `app_configs`, ältere Versionen `addons` und `addon_configs`.
 
-1. Das lokale Paket `goon-ha-local-0.1.1-58f2a07.tar.gz` auf dem Laptop entpacken. Den Ordner `goon_calendar_sync` vollständig nach `/addons/` auf HA kopieren; über Samba in die Freigabe `local_apps` bzw. `addons`. Ergebnis: `/addons/goon_calendar_sync/config.json` und `Dockerfile`.
+1. Das lokale Paket `goon-ha-local-0.1.2-58f2a07.tar.gz` auf dem Laptop entpacken. Den Ordner `goon_calendar_sync` vollständig nach `/addons/` auf HA kopieren; über Samba in die Freigabe `local_apps` bzw. `addons`. Ergebnis: `/addons/goon_calendar_sync/config.json` und `Dockerfile`.
 2. In HA **Einstellungen → Apps → App installieren/App-Store → ⋮ → Nach Updates suchen**. Unter „Lokale Apps“ erscheint „Goon Calendar Sync“.
 3. Installieren. HA baut das Image selbst. Der erste Build lädt ein größeres Playwright-Basisimage; einige Minuten und mehrere GB freier Speicher sind sinnvoll. Kein GitHub-Passwort oder Token nötig.
-4. Noch **nicht starten**. Autostart ist zunächst aus. Im Reiter „Konfiguration“ Goon-Zugang sowie ein separates Web-Passwort (mindestens 12 Zeichen) eintragen. Zugangsdaten niemals in Chat, GitHub oder Screenshots teilen.
+4. Noch **nicht starten**. Autostart ist zunächst aus. Im Reiter „Konfiguration“ Goon-Zugang sowie ein eigenes Web-Passwort eintragen. Für das Web-Passwort gibt es keine Längenvorgabe; auch ein Zeichen wird akzeptiert. Es darf nicht leer sein oder Zeilenumbrüche, Tabs und andere Steuerzeichen enthalten. Zugangsdaten niemals in Chat, GitHub oder Screenshots teilen.
 
 Schutzmodus eingeschaltet lassen. Kein Host-Netzwerk und kein privilegierter Zugriff erforderlich. Standard-Webport ist `8098`, in HA unter „Netzwerk“ änderbar.
 
@@ -75,7 +75,7 @@ HA Cloud/Nabu Casa stellt die App an Port 8098 nicht automatisch bereit. Die App
 ## Wenn etwas nicht startet
 
 - `Start gesperrt`: Alte Instanz stoppen, danach `active_instance` bestätigen.
-- Passwortfehler: Eigenes App-Passwort mit mindestens 12 Zeichen hinterlegen. Keine Passwörter in Fehlerberichte kopieren.
+- Passwortfehler: Eigenes App-Passwort hinterlegen. Seit Version 0.1.2 gibt es keine Längenvorgabe mehr; das Feld muss nur ausgefüllt sein und darf keine Steuerzeichen enthalten. Erscheint noch die alte Meldung mit „mindestens 12 Zeichen“, im HA-App-Store nach Updates suchen und die App aktualisieren (nicht deinstallieren). Keine Passwörter in Fehlerberichte kopieren.
 - Importquelle fehlt: Dateiname und Ordner aus Schritt 2 prüfen. Nicht die Datenbank der Home-Assistant-Hauptanwendung verwenden.
 - Vorhandene Zieldatenbank: Es wurde nichts überschrieben. Keine Daten löschen. Zunächst HA-Backup anlegen und den gewünschten Datenbestand klären.
 - Unterbrochener Import ohne Abschlussmarker: Bestehende HA-Datenbank wird nicht ersetzt. Nach Überprüfung/Sicherung ggf. Importoption abschalten; nicht einfach löschen und erneut importieren.

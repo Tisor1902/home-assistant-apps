@@ -1,3 +1,10 @@
+# 0.1.2
+
+- Längenvorgabe für das Web-Passwort entfernt; auch ein einzelnes Zeichen wird akzeptiert. Keine Mindestlänge von 12 Zeichen mehr und kein eigenes Maximallimit für dieses Feld.
+- Das Passwort bleibt erforderlich, die Web-Anmeldung aktiv. Leere Eingaben und Steuerzeichen werden weiterhin abgelehnt, ohne eingegebene Werte auszugeben.
+- Hinweise in HA und Dokumentation aktualisiert; Regressionstests für kurze Passwörter und Browser-Login ergänzt.
+- Keine Änderung an Datenbank, Import, Goon-Zugang oder Kalendersynchronisation.
+
 # 0.1.1
 
 - Öffentliche HA-Veröffentlichung mit eigenem versionierten Container-Image.

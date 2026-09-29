@@ -26,14 +26,21 @@ export function validateOptions(input) {
   };
   const value = { ...defaults, ...input };
   const output = {};
-  for (const field of ["godo_username", "godo_password", "app_username", "app_password", "timezone"]) {
-    const minimum = field === "app_password" ? 12 : 1;
-    if (typeof value[field] !== "string" || value[field].trim().length < minimum ||
+  for (const field of ["godo_username", "godo_password", "app_username", "timezone"]) {
+    if (typeof value[field] !== "string" || !value[field].trim() ||
         value[field].length > 4096 || /[\u0000-\u001f\u007f]/.test(value[field])) {
-      invalid(field, `Text mit mindestens ${minimum} Zeichen ohne Steuerzeichen erforderlich.`);
+      invalid(field, "Nicht leerer Text ohne Steuerzeichen erforderlich.");
     }
     output[field] = value[field].trim();
   }
+  // Web authentication requires a value, but imposes no password-length policy.
+  if (typeof value.app_password !== "string" || !value.app_password.trim()) {
+    invalid("app_password", "Bitte ein Passwort für die Weboberfläche eingeben. Es gibt keine Längenvorgabe.");
+  }
+  if (/[\u0000-\u001f\u007f]/.test(value.app_password)) {
+    invalid("app_password", "Keine Zeilenumbrüche, Tabs oder anderen Steuerzeichen erlaubt.");
+  }
+  output.app_password = value.app_password.trim();
   if (output.app_username.includes(":")) invalid("app_username", "Doppelpunkt ist nicht erlaubt.");
   try { new Intl.DateTimeFormat("en", { timeZone: output.timezone }); }
   catch { invalid("timezone", "Gültige IANA-Zeitzone erforderlich."); }
