@@ -1,0 +1,7 @@
+dist/
+node_modules/
+*.sqlite*
+options.json
+.env*
+secrets/
+.DS_Store

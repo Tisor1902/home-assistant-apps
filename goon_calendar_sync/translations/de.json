@@ -1,0 +1,17 @@
+{
+  "configuration": {
+    "godo_username": { "name": "Goon-Benutzername", "description": "Nur in HA eingeben, nicht in Chats oder GitHub." },
+    "godo_password": { "name": "Goon-Passwort" },
+    "app_username": { "name": "Benutzername für die Weboberfläche" },
+    "app_password": { "name": "Passwort für die Weboberfläche", "description": "Mindestens 12 Zeichen. Eigenes Passwort, unabhängig von Goon." },
+    "active_instance": { "name": "Bisherige Sync-Instanz gestoppt", "description": "Erst einschalten, nachdem der Container auf dem Laptop gestoppt ist. Kalender können sofort beim Start synchronisiert werden. Keine automatische Erkennung anderer Instanzen." },
+    "timezone": { "name": "Zeitzone" },
+    "automatic_check_enabled": { "name": "Automatischer Abruf (Startwert)", "description": "Ein bereits in der Goon-Weboberfläche gespeicherter Abrufplan hat Vorrang." },
+    "automatic_check_interval_minutes": { "name": "Abrufintervall in Minuten (Startwert)", "description": "720 = etwa zweimal täglich. 15 bis 10080 Minuten. Der gespeicherte UI-Abrufplan hat Vorrang." },
+    "automatic_past_months": { "name": "Zusätzliche vergangene Monate" },
+    "automatic_future_months": { "name": "Zusätzliche zukünftige Monate" },
+    "public_base_url": { "name": "Externe Basis-URL (optional)", "description": "Für neue Google-Anmeldungen z. B. https://dienstplan.example.de, ohne Unterpfad. Konfiguriert selbst keinen HTTPS-Proxy. Bei Übernahme bestehender Tokens zunächst leer lassen." },
+    "import_existing_database": { "name": "Bestehende Datenbank einmalig übernehmen", "description": "Sicherung vorher nach /addon_configs/local_goon_calendar_sync/import/godo-sync.sqlite kopieren. Niemals eine laufende Datenbank einfach kopieren. Vorhandene HA-Daten werden nicht überschrieben." }
+  },
+  "network": { "8080/tcp": "Goon-Weboberfläche (HTTP, nur vertrauenswürdiges LAN/VPN)" }
+}
