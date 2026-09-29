@@ -11,7 +11,7 @@
     "automatic_past_months": { "name": "Zusätzliche vergangene Monate" },
     "automatic_future_months": { "name": "Zusätzliche zukünftige Monate" },
     "public_base_url": { "name": "Externe Basis-URL (optional)", "description": "Für neue Google-Anmeldungen z. B. https://dienstplan.example.de, ohne Unterpfad. Konfiguriert selbst keinen HTTPS-Proxy. Bei Übernahme bestehender Tokens zunächst leer lassen." },
-    "import_existing_database": { "name": "Bestehende Datenbank einmalig übernehmen", "description": "Sicherung vorher nach /addon_configs/local_goon_calendar_sync/import/godo-sync.sqlite kopieren. Niemals eine laufende Datenbank einfach kopieren. Vorhandene HA-Daten werden nicht überschrieben." }
+    "import_existing_database": { "name": "Bestehende Datenbank einmalig übernehmen", "description": "Sicherung vorher im eigenen App-Konfigurationsordner unter import/godo-sync.sqlite ablegen. App-ID beachten: local_goon_calendar_sync bei lokaler Installation, sonst Repository-Hash als Präfix. Vorhandene HA-Daten werden nicht überschrieben." }
   },
   "network": { "8080/tcp": "Goon-Weboberfläche (HTTP, nur vertrauenswürdiges LAN/VPN)" }
 }

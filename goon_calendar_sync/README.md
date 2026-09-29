@@ -1,6 +1,6 @@
 # Goon Calendar Sync
 
-Der bestehende Goon-Kalender-Sync als lokale Home-Assistant-App für amd64. Mit passwortgeschützter Weboberfläche, dauerhaft gespeicherten Daten, Google Calendar und CalDAV.
+Goon-Kalender-Sync als Home-Assistant-App für amd64. Mit passwortgeschützter Weboberfläche, dauerhaft gespeicherten Daten, Google Calendar und CalDAV. Über die Repository-URL installierbar; alternativ als lokales Release-Paket. Keine offizielle Anwendung von ASB oder Godo.
 
 Die Dienstplan-Prüfungen des Core bleiben unverändert. Home-Legende, Abteilungsabgleich und Schutz vor ungeprüften Kalenderänderungen werden nicht durch diese Verpackung ersetzt.
 

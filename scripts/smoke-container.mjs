@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { setTimeout } from "node:timers/promises";
 
-const image = process.argv[2] || "goon-ha:0.1.0";
+const image = process.argv[2] || "goon-ha:0.1.1";
 const directory = mkdtempSync(join(tmpdir(), "goon-ha-smoke-"));
 const data = join(directory, "data"), config = join(directory, "config");
 mkdirSync(data, { mode: 0o700 });
@@ -117,7 +117,12 @@ try {
   const logs = logResult.stdout + logResult.stderr;
   for (const secret of [options.godo_password, options.app_password]) assert.ok(!logs.includes(secret));
   docker(["stop", "--time", "20", running]);
-  process.stdout.write(JSON.stringify({ result: "passed", checks: ["inactive-start-guard", "health", "API-auth", "Chromium-64MiB-shm", "dashboard", "UI-setting-persistence", "private-database", "graceful-shutdown", "secret-free-logs"], network: "none", realCredentials: false }) + "\n");
+  const checks = [
+    "inactive-start-guard", "health", "HTTP-401", "Chromium-64MiB-shm",
+    "dashboard", "UI-setting-persistence", "private-database", "graceful-shutdown",
+    "secret-free-logs",
+  ];
+  process.stdout.write(JSON.stringify({ result: "passed", checks, network: "none", realCredentials: false }) + "\n");
 } catch (error) {
   // Only generated fixtures are used. Redact them even from diagnostic exception messages.
   const reason = String(error.message || error.name).replaceAll(options.godo_password, '[REDACTED]').replaceAll(options.app_password, '[REDACTED]');

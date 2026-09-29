@@ -46,7 +46,14 @@ export async function createBundle({ coreDirectory, outputDirectory = join(proje
     for (const [, , blob, path] of selected) {
       if (path !== "Dockerfile") await put(path, git(["cat-file", "blob", blob]));
     }
-    for (const path of wrapperFiles) await put(path, await readFile(join(root, "goon_calendar_sync", path)));
+    for (const path of wrapperFiles) {
+      if (path === "config.json") {
+        // A local package must build its bundled code, not pull a registry image.
+        const localManifest = { ...manifest };
+        delete localManifest.image;
+        await put(path, JSON.stringify(localManifest, null, 2) + "\n");
+      } else await put(path, await readFile(join(root, "goon_calendar_sync", path)));
+    }
     const coreDockerfile = git(["show", `${lock.commit}:Dockerfile`]).toString();
     const wrapperDockerfile = await readFile(join(root, "goon_calendar_sync/Dockerfile"), "utf8");
     await put("Dockerfile", bundledDockerfile(coreDockerfile, wrapperDockerfile));

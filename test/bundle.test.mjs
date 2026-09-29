@@ -44,6 +44,8 @@ test("actual archive uses committed allowlisted files only and refuses overwrite
     assert.ok(!files.some(file => file.includes(fragment)), fragment);
   }
   assert.equal(execFileSync("tar", ["-xOf", result.archive, "goon_calendar_sync/src/app.mjs"], { encoding: "utf8" }), source);
+  const manifest = JSON.parse(execFileSync("tar", ["-xOf", result.archive, "goon_calendar_sync/config.json"], { encoding: "utf8" }));
+  assert.equal(manifest.image, undefined, "Local installation must not depend on the registry");
   const provenance = JSON.parse(execFileSync("tar", ["-xOf", result.archive, "goon_calendar_sync/bundle-provenance.json"], { encoding: "utf8" }));
   assert.equal(provenance.core.commit, commit);
   for (const [path, hash] of Object.entries(provenance.files)) {

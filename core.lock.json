@@ -1,5 +1,7 @@
 {
   "repository": "https://github.com/Tisor1902/goon-calendar-sync",
   "commit": "58f2a0750808c7b7afd53d5e95b390015bf60c89",
-  "image": "ghcr.io/tisor1902/goon-calendar-sync:sha-58f2a07"
+  "image": "ghcr.io/tisor1902/goon-calendar-sync:sha-58f2a07",
+  "sourceArchive": "https://github.com/Tisor1902/home-assistant-apps/releases/download/v0.1.0/goon-ha-local-0.1.0-58f2a07.tar.gz",
+  "sourceSha256": "c2a4af2adde32cf52a0f343238c142c6d4eb160c171a4380f7203e2e0be97097"
 }

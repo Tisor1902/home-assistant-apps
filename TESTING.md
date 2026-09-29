@@ -23,7 +23,7 @@ SHA-256:
 c2a4af2adde32cf52a0f343238c142c6d4eb160c171a4380f7203e2e0be97097
 ```
 
-Das Archiv enthält 35 Dateien einschließlich Herkunfts-/Hashmanifest: ausschließlich ausgewählte Core-Code-Dateien und HA-Verpackung. Keine Datenbank, Secrets, `.env`, Git-Historie oder uncommittete Core-Dateien. Wegen des privaten Core-Quellcodes trotzdem nicht öffentlich verteilen.
+Das Archiv enthält 35 Dateien einschließlich Herkunfts-/Hashmanifest: ausschließlich ausgewählte Core-Code-Dateien und HA-Verpackung. Keine Datenbank, Secrets, `.env`, Git-Historie oder uncommittete Core-Dateien. Zunächst privat bereitgestellt; die Veröffentlichung dieses geprüften Code-Snapshots wurde anschließend vom Repository-Inhaber freigegeben. Das private Entwicklungs-Repository und seine Historie werden nicht veröffentlicht.
 
 ## Noch auf dem Zielgerät zu prüfen
 

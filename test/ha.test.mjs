@@ -40,7 +40,8 @@ test("HA defaults: amd64, manual startup, cold backup, auth, least privilege", a
   assert.equal(config.options.active_instance, false);
   assert.equal(config.options.automatic_check_interval_minutes, 720);
   assert.deepEqual(config.map, [{ type: "addon_config", read_only: true }]);
-  for (const forbidden of ["image", "privileged", "full_access", "host_network", "host_pid", "host_ipc", "docker_api", "hassio_api", "homeassistant_api", "ingress"]) {
+  assert.equal(config.image, "ghcr.io/tisor1902/goon-calendar-sync-ha");
+  for (const forbidden of ["privileged", "full_access", "host_network", "host_pid", "host_ipc", "docker_api", "hassio_api", "homeassistant_api", "ingress"]) {
     assert.equal(config[forbidden], undefined, forbidden);
   }
   const translations = JSON.parse(await text("../goon_calendar_sync/translations/de.json"));
@@ -53,7 +54,13 @@ test("wrapper pins exactly the recorded core commit", async () => {
   const dockerfile = await text("../goon_calendar_sync/Dockerfile");
   assert.match(lock.commit, /^[a-f0-9]{40}$/);
   assert.equal(lock.image, `ghcr.io/tisor1902/goon-calendar-sync:sha-${lock.commit.slice(0, 7)}`);
-  assert.ok(dockerfile.startsWith(`ARG GOON_IMAGE=${lock.image}\n`));
+  assert.match(lock.sourceSha256, /^[a-f0-9]{64}$/);
+  assert.ok(dockerfile.includes(`ADD ${lock.sourceArchive} /tmp/goon-source.tar.gz`));
+  assert.ok(dockerfile.includes(`${lock.sourceSha256}  /tmp/goon-source.tar.gz`));
+  assert.ok(dockerfile.includes(`org.opencontainers.image.revision="${lock.commit}"`));
+  assert.ok(!dockerfile.includes('FROM ${GOON_IMAGE}'));
+  const manifest = JSON.parse(await text("../goon_calendar_sync/config.json"));
+  assert.ok(dockerfile.includes(`ARG BUILD_VERSION=${manifest.version}`));
 });
 
 test("options map valid defaults, never allow source or authentication overrides", () => {

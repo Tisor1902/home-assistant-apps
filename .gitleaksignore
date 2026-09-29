@@ -1,0 +1,3 @@
+# Reviewed false positive: this historical line contains only the smoke-test
+# check names printed after success, never a credential or generated password.
+53bf00c41d8eb7b4d8084b4aa86bfd5d5cda2aa4:scripts/smoke-container.mjs:generic-api-key:120
