@@ -67,12 +67,13 @@ test("wrapper pins exactly the recorded core commit", async () => {
 });
 
 test("options map valid defaults, never allow source or authentication overrides", () => {
-  const options = validateOptions({ ...valid, APP_AUTH_DISABLED: "true", GODO_BASE_URL: "http://untrusted.invalid" });
+  const options = validateOptions({ ...valid, APP_AUTH_DISABLED: "true", GODO_BASE_URL: "http://untrusted.invalid", GOOGLE_LOGIN_MODE: "server_browser" });
   const environment = environmentFor(options, { dataDirectory: "/data", secretFiles: { username: "/tmp/u", password: "/tmp/p", appPassword: "/tmp/a" } });
   assert.equal(environment.APP_AUTH_DISABLED, "false");
   assert.equal(environment.GODO_BASE_URL, "https://goon.asb-bw.de");
   assert.equal(environment.AUTOMATIC_CHECK_INTERVAL_MINUTES, "720");
   assert.equal(environment.BROWSER_HEADLESS, "true");
+  assert.equal(environment.GOOGLE_LOGIN_MODE, "direct");
   for (const secret of [valid.godo_password, valid.app_password]) assert.ok(!JSON.stringify(environment).includes(secret));
 });
 

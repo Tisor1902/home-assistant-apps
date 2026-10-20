@@ -1,12 +1,12 @@
 # Goon Calendar Sync für Home Assistant OS
 
-Öffentliche HA-Verpackung für den Goon-Kalender-Sync. Die Anwendung wird weiterhin in `Tisor1902/goon-calendar-sync` entwickelt; dieses Entwicklungs-Repository kann privat bleiben. Veröffentlichte Code-Stände liegen als geprüfte Release-Pakete vor. `core.lock.json` legt Core-Commit, Download und SHA-256 fest. Es gibt keine zweite gepflegte Kopie des Anwendungscodes.
+Öffentliche HA-Verpackung für den Goon-Kalender-Sync. Die Anwendung wird weiterhin in `Tisor1902/goon-calendar-sync` entwickelt. Veröffentlichte Code-Stände liegen als geprüfte Release-Pakete vor. `core.lock.json` legt Core-Commit, Download und SHA-256 fest. Es gibt keine zweite gepflegte Kopie des Anwendungscodes.
 
 Ziel: HA OS auf **amd64**. Noch kein ARM-Support. Bis zum erfolgreichen Test auf echtem HA OS als `experimental` markiert. Keine offizielle Anwendung von ASB oder Godo.
 
 ## Installation über den HA-App-Store
 
-Repository in **Einstellungen → Apps/Add-ons → App-Store → ⋮ → Repositories** hinzufügen:
+Repository in **Einstellungen → Apps → App-Store → ⋮ → Repositories** hinzufügen:
 
 ```text
 https://github.com/Tisor1902/home-assistant-apps
@@ -14,7 +14,9 @@ https://github.com/Tisor1902/home-assistant-apps
 
 Alternativ: [Repository in Home Assistant hinzufügen](https://my.home-assistant.io/redirect/supervisor_addon_repository/?repository=https%3A%2F%2Fgithub.com%2FTisor1902%2Fhome-assistant-apps).
 
-Danach „Goon Calendar Sync“ auswählen und installieren. HA lädt das versionierte Image `ghcr.io/tisor1902/goon-calendar-sync-ha:0.1.2`. Kein GitHub-Token und kein lokaler Build erforderlich. **Noch nicht starten**, wenn eine bisherige Instanz denselben Kalender verwaltet. Vorher die Daten übernehmen und die alte Instanz stoppen.
+Danach „Goon Calendar Sync“ auswählen und installieren. HA lädt das versionierte Image `ghcr.io/tisor1902/goon-calendar-sync-ha:0.2.0`. Kein GitHub-Token und kein lokaler Build erforderlich. **Noch nicht starten**, wenn eine bisherige Instanz denselben Kalender verwaltet. Vorher die Daten übernehmen und die alte Instanz stoppen.
+
+Version **0.2.0** bringt den Anwendungsstand `e17b20d` mit Dark-Mode-Monatskalender, ICS-Import, Fortschritt/Fehlerdetails, verbessertem automatischem Kalenderabgleich und mehreren Benachrichtigungskanälen auf HA. Der optionale Google-Anmeldebrowser ist weiterhin nur für Unraid/Compose verpackt; auf HA bleibt die direkte Anmeldung über HTTPS oder einen separat eingerichteten Loopback-Tunnel.
 
 Beim ersten Veröffentlichen muss das GHCR-Paket separat auf **Public** gestellt und anonymes Herunterladen geprüft werden; die Sichtbarkeit des Repositorys allein genügt nicht.
 
@@ -22,7 +24,7 @@ Die vollständige Installations- und Umzugsanleitung steht in [goon_calendar_syn
 
 ## Lokales Paket als Alternative
 
-Die Release-Datei `goon-ha-local-0.1.2-58f2a07.tar.gz` kann weiterhin als lokale App installiert werden. HA baut sie selbst; Internet für das öffentliche Playwright-Basisimage und npm-Abhängigkeiten wird benötigt. Der Export entfernt dazu bewusst den `image`-Verweis aus der App-Konfiguration.
+Die Release-Datei `goon-ha-local-0.2.0-e17b20d.tar.gz` kann weiterhin als lokale App installiert werden. HA baut sie selbst; Internet für das öffentliche Playwright-Basisimage und npm-Abhängigkeiten wird benötigt. Der Export entfernt dazu bewusst den `image`-Verweis aus der App-Konfiguration.
 
 Das Paket enthält nur freigegebene Code-Dateien des fixierten Core-Commits und die HA-Verpackung. Keine Datenbank, keine echten Passwörter oder Tokens, keine Git-Historie. Ältere Release-Pakete bleiben als reproduzierbare Quellstände bestehen.
 
@@ -53,7 +55,7 @@ Der Dockerfile lädt einen öffentlich bereitgestellten, per SHA-256 geprüften 
 
 Der Paket-Exporter erzeugt einen Dockerfile aus den **committeten** Core-Dateien plus HA-Startschicht. Lokale, uncommittete Änderungen am Core werden ausdrücklich nicht mitgenommen. Bei einem Core-Update den geprüften Quellstand veröffentlichen, Commit/Download/Hash gemeinsam aktualisieren, App-Version erhöhen und erneut testen. Keine automatischen `latest`-Updates.
 
-Repository-Installationen erhalten Updates über HA. Bei lokalen Installationen die Dateien in `/addons/goon_calendar_sync/` ersetzen und den Neubau ausführen. `/data` bleibt innerhalb derselben App-ID erhalten. **Der Wechsel von einer lokalen zur Repository-Installation hat eine andere App-ID und benötigt einen bewussten Datenumzug.** Vorher HA-Backup erstellen. Nicht deinstallieren, um zu aktualisieren: Deinstallation kann App-Daten löschen.
+Repository-Installationen erhalten Updates über HA. Vor dem Update ein HA-Backup einschließlich dieser App erstellen, im App-Store nach Updates suchen und die bestehende App aktualisieren. Bereits vorhandene Optionen, Adressen, ICS-Termine und Kalender-Verknüpfungen bleiben in derselben App-ID erhalten; keinen erneuten Datenbank-Import einschalten. Bei lokalen Installationen die Dateien in `/addons/goon_calendar_sync/` ersetzen und den Neubau ausführen. `/data` bleibt innerhalb derselben App-ID erhalten. **Der Wechsel von einer lokalen zur Repository-Installation hat eine andere App-ID und benötigt einen bewussten Datenumzug.** Nicht deinstallieren, um zu aktualisieren: Deinstallation kann App-Daten löschen. Bei einem fehlgeschlagenen Upgrade die vor dem Update erstellte Sicherung dieser App über die HA-Wiederherstellung verwenden; ein älteres Image allein setzt Datenbankmigrationen nicht zurück.
 
 ## Entwicklung und Prüfungen
 

@@ -91,6 +91,8 @@ export function environmentFor(options, { dataDirectory, secretFiles }) {
     DATA_DIR: dataDirectory,
     PORT: "8080", TZ: options.timezone, BROWSER_HEADLESS: "true",
     PUBLIC_BASE_URL: options.public_base_url,
+    // The optional shared-network browser is a separate Unraid/Compose feature.
+    GOOGLE_LOGIN_MODE: "direct",
     AUTOMATIC_CHECK_ENABLED: String(options.automatic_check_enabled),
     AUTOMATIC_CHECK_INTERVAL_MINUTES: String(options.automatic_check_interval_minutes),
     AUTOMATIC_PAST_MONTHS: String(options.automatic_past_months),

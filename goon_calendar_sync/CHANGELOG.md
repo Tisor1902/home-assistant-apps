@@ -1,3 +1,14 @@
+# 0.2.0
+
+- Anwendung auf den geprüften Hauptprojekt-Commit `e17b20d` aktualisiert; weiterhin feste Code-Version mit SHA-256 statt automatischem `latest`-Update.
+- Dark Mode, dauerhaft sichtbare Monatsansicht, zusammengeführte Monatssteuerung und überarbeitete Dienstübersicht.
+- ICS-Import mit Bearbeiten/Löschen und Vorrang bei Dienstkollisionen; mehrere Dienste am selben Tag und GOON-Freigabestatus.
+- Vollautomatischer Kalenderabgleich, Adressübernahme nur bei fehlender lokaler Adresse, Fortschrittsanzeige und einsehbare Fehlerdetails.
+- Begrenztes automatisches Abruffenster, jährliche Nachprüfung, gezielte Wiederholungen und Google-Neuanmeldung ohne doppelte Kalenderziele.
+- Mehrere Benachrichtigungskanäle (Telegram, Home Assistant, E-Mail, Webhook) mit auswählbaren Ereignissen und Zustellstatus.
+- Gleiche App-ID, Datenpfade, Optionen und verpflichtende Web-Anmeldung. Bestehende Daten werden beim Update weiterverwendet, nicht neu importiert. Vorher ein HA-Backup einschließlich dieser App erstellen; nicht deinstallieren.
+- Der zusätzliche Google-Anmeldebrowser bleibt Unraid/Compose vorbehalten. Auf HA weiterhin HTTPS-Adresse oder separat eingerichteten Loopback-Tunnel für eine neue Google-Anmeldung verwenden.
+
 # 0.1.2
 
 - Längenvorgabe für das Web-Passwort entfernt; auch ein einzelnes Zeichen wird akzeptiert. Keine Mindestlänge von 12 Zeichen mehr und kein eigenes Maximallimit für dieses Feld.

@@ -34,7 +34,8 @@ test("actual archive uses committed allowlisted files only and refuses overwrite
     await mkdir(dirname(destination), { recursive: true });
     await copyFile(new URL(`../goon_calendar_sync/${path}`, import.meta.url), destination);
   }
-  await writeFile(join(root, "core.lock.json"), JSON.stringify({ repository: "fixture", commit, image: "fixture" }));
+  await writeFile(join(root, "core.lock.json"), JSON.stringify({ repository: "fixture", commit, image: "fixture",
+    sourceArchive: "https://example.invalid/this-archive.tar.gz", sourceSha256: "0".repeat(64) }));
   const result = await createBundle({ coreDirectory: core, outputDirectory, root });
   assert.equal((await stat(result.archive)).mode & 0o777, 0o600);
   assert.equal(result.sha256, createHash("sha256").update(await readFile(result.archive)).digest("hex"));
@@ -48,6 +49,8 @@ test("actual archive uses committed allowlisted files only and refuses overwrite
   assert.equal(manifest.image, undefined, "Local installation must not depend on the registry");
   const provenance = JSON.parse(execFileSync("tar", ["-xOf", result.archive, "goon_calendar_sync/bundle-provenance.json"], { encoding: "utf8" }));
   assert.equal(provenance.core.commit, commit);
+  assert.equal(provenance.core.sourceArchive, undefined);
+  assert.equal(provenance.core.sourceSha256, undefined, "An archive must not try to embed its own checksum");
   for (const [path, hash] of Object.entries(provenance.files)) {
     const bytes = execFileSync("tar", ["-xOf", result.archive, `goon_calendar_sync/${path}`]);
     assert.equal(createHash("sha256").update(bytes).digest("hex"), hash);

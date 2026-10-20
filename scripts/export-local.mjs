@@ -58,7 +58,10 @@ export async function createBundle({ coreDirectory, outputDirectory = join(proje
     const wrapperDockerfile = await readFile(join(root, "goon_calendar_sync/Dockerfile"), "utf8");
     await put("Dockerfile", bundledDockerfile(coreDockerfile, wrapperDockerfile));
     await put("bundle-provenance.json", JSON.stringify({
-      format: 1, version: manifest.version, core: lock,
+      // This archive may itself be the sourceArchive in core.lock.json. Including
+      // its own download hash would create an impossible circular checksum.
+      format: 1, version: manifest.version,
+      core: { repository: lock.repository, commit: lock.commit, image: lock.image },
       generatedAt: new Date().toISOString(), files: { ...hashes },
       note: "Only allowlisted committed core source and HA wrapper. No user data, credentials or Git history.",
     }, null, 2) + "\n");

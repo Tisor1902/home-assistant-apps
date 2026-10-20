@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 const image = process.argv[2];
 if (!image) throw new Error("Container-Image fehlt.");
@@ -10,11 +11,16 @@ try {
   assert.ok(!metadata.Config.Env.some(value => forbidden.test(value)));
   assert.equal(metadata.Architecture, "amd64");
   assert.equal(metadata.Config.Labels["io.hass.type"], "app");
+  const lock = JSON.parse(readFileSync(new URL("../core.lock.json", import.meta.url)));
+  const manifest = JSON.parse(readFileSync(new URL("../goon_calendar_sync/config.json", import.meta.url)));
+  assert.equal(metadata.Config.Labels["io.hass.version"], manifest.version);
+  assert.equal(metadata.Config.Labels["org.opencontainers.image.revision"], lock.commit);
   docker(["run", "--rm", "--network", "none", "--read-only", "--cap-drop", "ALL", "--entrypoint", "node", image, "--input-type=module", "-e", `
     import assert from 'node:assert/strict';
     import {existsSync,readdirSync,readFileSync} from 'node:fs';
     for (const path of ['/data/options.json','/data/godo-sync.sqlite','/app/.env','/app/.git','/app/data','/app/secrets','/run/secrets']) assert.equal(existsSync(path),false);
     if(existsSync('/data'))assert.deepEqual(readdirSync('/data'),[]);
+    for(const file of ['imported-events.mjs','work-progress.mjs','notifications.mjs','notification-ui.mjs','google-login.mjs'])assert.equal(existsSync('/app/src/'+file),true);
     for(const directory of ['/app/src','/app/ha'])for(const name of readdirSync(directory)){
       assert.ok(name.endsWith('.mjs'));
       const content=readFileSync(directory+'/'+name,'utf8');

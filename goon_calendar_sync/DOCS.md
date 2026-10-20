@@ -2,7 +2,7 @@
 
 ## 1. Über die Repository-URL installieren
 
-Voraussetzung: HA OS auf amd64. Unter **Einstellungen → Apps/Add-ons → App-Store → ⋮ → Repositories** diese URL hinzufügen:
+Voraussetzung: HA OS auf amd64. Unter **Einstellungen → Apps → App-Store → ⋮ → Repositories** diese URL hinzufügen:
 
 ```text
 https://github.com/Tisor1902/home-assistant-apps
@@ -16,14 +16,20 @@ Die App-ID ist bei Repository-Installation `<Repository-Hash>_goon_calendar_sync
 
 Zugriff auf den HA-Ordner `addons` über Samba oder SSH. Aktuelle Samba-Versionen nennen die Freigaben `local_apps` und `app_configs`, ältere Versionen `addons` und `addon_configs`.
 
-1. Das lokale Paket `goon-ha-local-0.1.2-58f2a07.tar.gz` auf dem Laptop entpacken. Den Ordner `goon_calendar_sync` vollständig nach `/addons/` auf HA kopieren; über Samba in die Freigabe `local_apps` bzw. `addons`. Ergebnis: `/addons/goon_calendar_sync/config.json` und `Dockerfile`.
+1. Das lokale Paket `goon-ha-local-0.2.0-e17b20d.tar.gz` auf dem Laptop entpacken. Den Ordner `goon_calendar_sync` vollständig nach `/addons/` auf HA kopieren; über Samba in die Freigabe `local_apps` bzw. `addons`. Ergebnis: `/addons/goon_calendar_sync/config.json` und `Dockerfile`.
 2. In HA **Einstellungen → Apps → App installieren/App-Store → ⋮ → Nach Updates suchen**. Unter „Lokale Apps“ erscheint „Goon Calendar Sync“.
 3. Installieren. HA baut das Image selbst. Der erste Build lädt ein größeres Playwright-Basisimage; einige Minuten und mehrere GB freier Speicher sind sinnvoll. Kein GitHub-Passwort oder Token nötig.
 4. Noch **nicht starten**. Autostart ist zunächst aus. Im Reiter „Konfiguration“ Goon-Zugang sowie ein eigenes Web-Passwort eintragen. Für das Web-Passwort gibt es keine Längenvorgabe; auch ein Zeichen wird akzeptiert. Es darf nicht leer sein oder Zeilenumbrüche, Tabs und andere Steuerzeichen enthalten. Zugangsdaten niemals in Chat, GitHub oder Screenshots teilen.
 
 Schutzmodus eingeschaltet lassen. Kein Host-Netzwerk und kein privilegierter Zugriff erforderlich. Standard-Webport ist `8098`, in HA unter „Netzwerk“ änderbar.
 
-## 2. Bestehende Daten übernehmen (empfohlen)
+### Bestehende HA-Installation aktualisieren
+
+Version 0.2.0 verwendet denselben App-Slug und `/data`. Vorher unter **Einstellungen → System → Backups** eine Sicherung einschließlich **Goon Calendar Sync** erstellen und den Wiederherstellungsschlüssel geschützt aufbewahren. Im App-Store nach Updates suchen und dann bei der bereits installierten App **Aktualisieren** wählen. Nicht deinstallieren und `import_existing_database` nicht für ein normales Update einschalten. Einstellungen, Adressen und Kalender-Zuordnungen werden weiterverwendet; neuere Tabellen legt die Anwendung selbst an.
+
+Nach dem Update Web-Anmeldung, gespeicherte Dienste, Kalenderziel und letzten erfolgreichen Abruf kontrollieren. Die neue Version synchronisiert automatisch ohne einzelne Freigaben, entsprechend den aktivierten Zielen und dem GOON-Freigabestatus. Keine zweite Instanz am selben Kalender einschalten. Sollte das Upgrade fehlschlagen, über HA nur die betroffene App aus der **vor dem Update** erstellten Sicherung wiederherstellen; das ist eine bewusste Datenrücksetzung. Ein bloßer Image-Downgrade ist kein Ersatz für die gesicherte Datenbank. Das Update veröffentlicht weder eigene Zugangsdaten noch erzeugt es ein neues Kalenderziel.
+
+## 2. Bestehende Daten beim Umzug übernehmen (optional)
 
 Die Datenbank enthält Dienste, Adressen, Freigaben, Abrufintervall, Google-/CalDAV-Zugangsdaten sowie die Verknüpfungen zu bereits angelegten Terminen. Ihre Übernahme vermeidet eine neue Zuordnung derselben Kalendertermine. Sie ist **vertraulich** und gehört nicht ins Installationspaket.
 
@@ -50,9 +56,11 @@ Die Datenbank enthält Dienste, Adressen, Freigaben, Abrufintervall, Google-/Cal
 
 Nur wenn keine Daten übernommen werden sollen: `import_existing_database` aus lassen, Goon-/App-Zugang konfigurieren und `active_instance` nach Prüfung anderer Instanzen bestätigen. Die App erstellt eine neue Datenbank. Google/CalDAV anschließend in der Weboberfläche verbinden und den eigenen Dienstplan-Kalender auswählen.
 
-Bei einem bereits gefüllten Kalender nicht blind eine zweite neue Instanz aktivieren: Der bisherige Datenbestand und die gespeicherten Kalender-Verknüpfungen sollten vorzugsweise übernommen werden. Andernfalls den bestehenden Terminbestand zuerst über die Abgleich-/Freigabefunktionen zuordnen.
+Bei einem bereits gefüllten Kalender nicht blind eine zweite neue Instanz aktivieren: Der bisherige Datenbestand und die gespeicherten Kalender-Verknüpfungen sollten vorzugsweise übernommen werden. Der aktuelle Abgleich kann vorhandene passende Termine im dedizierten Dienstplankalender automatisch übernehmen; lokale Daten bleiben danach maßgeblich. Zielkalender und Inhalt vor der Aktivierung kontrollieren.
 
 ## Google-Anmeldung und HTTPS
+
+Der zusätzliche Firefox-Anmeldebrowser des Hauptprojekts ist ausschließlich für Unraid/Compose eingerichtet, nicht für diese HA-App. Der HA-Start erzwingt weiterhin den direkten Google-Anmeldemodus. Kein zusätzlicher Browser-Port, Docker-Zugriff oder Host-Netzwerk wird dafür geöffnet.
 
 Bereits gespeicherte gültige Google-Refresh-Tokens funktionieren grundsätzlich unabhängig von der Browser-Adresse weiter. Die Datenbank-Übernahme erhält sie; eine erneute Zustimmung kann bei widerrufenen/abgelaufenen Tokens trotzdem erforderlich werden.
 
