@@ -1,3 +1,10 @@
+# 0.3.0
+
+- Optionaler Google-Anmeldebrowser jetzt auch auf HA OS: separate Browser-App mit geschütztem HTTPS-Fenster und fester Rückleitung auf 127.0.0.1.
+- Explizite Kopplung über einen privaten Schlüssel; gegenseitig authentifizierter TLS-Kanal ohne Host-/Docker-/Supervisor-Zugriff.
+- Browser-Modus standardmäßig aus; direkte Anmeldung und bestehende Tokens unverändert. Core bleibt `e17b20d`; keine neuen Datenbankmigrationen.
+- Bestehende App-ID/Daten behalten. Vor dem Update HA-Backup erstellen; Browser-App separat konfigurieren und nur zur Anmeldung starten.
+
 # 0.2.0
 
 - Anwendung auf den geprüften Hauptprojekt-Commit `e17b20d` aktualisiert; weiterhin feste Code-Version mit SHA-256 statt automatischem `latest`-Update.

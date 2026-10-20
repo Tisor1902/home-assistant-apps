@@ -17,7 +17,7 @@ RUN echo "65d071a333cd16596eabed52292a1c25fb9b7014ba24ce15a7594e00110a4812  /tmp
     && corepack enable && corepack prepare pnpm@11.19.0 --activate \
     && pnpm install --frozen-lockfile --prod
 
-ARG BUILD_VERSION=0.2.0
+ARG BUILD_VERSION=0.3.0
 LABEL io.hass.version="${BUILD_VERSION}" \
       io.hass.type="app" \
       io.hass.arch="amd64" \

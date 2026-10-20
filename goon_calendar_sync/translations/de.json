@@ -11,7 +11,10 @@
     "automatic_past_months": { "name": "Zusätzliche vergangene Monate" },
     "automatic_future_months": { "name": "Zusätzliche zukünftige Monate" },
     "public_base_url": { "name": "Externe Basis-URL (optional)", "description": "Für neue Google-Anmeldungen z. B. https://dienstplan.example.de, ohne Unterpfad. Konfiguriert selbst keinen HTTPS-Proxy. Bei Übernahme bestehender Tokens zunächst leer lassen." },
-    "import_existing_database": { "name": "Bestehende Datenbank einmalig übernehmen", "description": "Sicherung vorher im eigenen App-Konfigurationsordner unter import/godo-sync.sqlite ablegen. App-ID beachten: local_goon_calendar_sync bei lokaler Installation, sonst Repository-Hash als Präfix. Vorhandene HA-Daten werden nicht überschrieben." }
+    "import_existing_database": { "name": "Bestehende Datenbank einmalig übernehmen", "description": "Sicherung vorher im eigenen App-Konfigurationsordner unter import/godo-sync.sqlite ablegen. App-ID beachten: local_goon_calendar_sync bei lokaler Installation, sonst Repository-Hash als Präfix. Vorhandene HA-Daten werden nicht überschrieben." },
+    "google_login_browser_enabled": { "name": "Google-Anmeldebrowser auf HA verwenden", "description": "Benötigt zusätzlich die App Goon Google-Anmeldebrowser und denselben privaten Kopplungsschlüssel. Die normale Oberfläche bleibt unverändert erreichbar. Standardmäßig aus." },
+    "google_login_browser_url": { "name": "HTTPS-Adresse des Anmeldebrowsers", "description": "Zum Beispiel https://ha.internal:3081; ohne Pfad. Leer verwendet den Hostnamen der normalen Goon-Oberfläche mit HTTPS-Port 3081. Nur LAN/VPN, keine Internetfreigabe." },
+    "google_login_pairing_key": { "name": "Privater Browser-Kopplungsschlüssel", "description": "64 zufällige Hex-Zeichen, lokal z. B. mit openssl rand -hex 32 erzeugen. Identisch in der Browser-App eintragen. Dies ist ein technischer Schlüssel, kein Google-Passwort. Niemals in Chat oder GitHub teilen." }
   },
   "network": { "8080/tcp": "Goon-Weboberfläche (HTTP, nur vertrauenswürdiges LAN/VPN)" }
 }

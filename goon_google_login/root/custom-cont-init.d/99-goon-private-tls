@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+chown root:root /config/ssl /config/ssl/cert.pem /config/ssl/cert.key
+chmod 700 /config/ssl
+chmod 600 /config/ssl/cert.key

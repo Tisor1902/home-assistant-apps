@@ -1,3 +1,19 @@
+# Prüfstand 0.3.0 – 20. Oktober 2026
+
+- Unveränderter Core `e17b20d`: **307 Anwendungstests** im gebauten HA-Image erfolgreich.
+- **42 HA-Verpackungstests** erfolgreich, einschließlich Browser-Opt-in, Schlüsselprüfung, gegenseitigem TLS-Pinning, falschem Client/Server, TLS-Mindestversion, Cookie-/Header-Weiterleitung, privaten Dateien und Übersetzungen.
+- Beide tatsächlichen Images gebaut und auf Versions-/Architektur-Labels, fehlende Nutzerdaten/Test-Fixtures und sichere Standardkonfiguration geprüft. Haupt-App `0.3.0`, getrennte Browser-Komponente `0.3.0-browser` im selben öffentlichen GHCR-Paket.
+- Haupt-App: Offline-Neuinstallation und Upgrade aus dem veröffentlichten HA-Image **0.2.0** erfolgreich. Dienste, Adressen, private Einstellungen, Google-Refresh-Token, Kalender-ID und Remote-Zuordnungen bleiben erhalten; ICS, Benachrichtigungen, HTTP-Anmeldung, Chromium und Neustart-Persistenz ebenfalls geprüft.
+- Zwei echte Container in einem internen Docker-Netz ohne Internet: regulärer Firefox öffnet seinen lokalen Proxy, führt mit echten App-Cookies und PKCE den synthetischen Google-OAuth-Rückweg zur Haupt-App aus und erneuert **dasselbe** Ziel. Kein neues Kalenderziel; Einstellungen und Terminzuordnungen unverändert.
+- Browser-GUI: HTTPS-Anmeldung und Ablehnung fehlender/falscher Zugangsdaten, kein HTTP-Port 3000, kein externer Zugriff auf Loopback-Proxy/Selkies. Firefox-UID kann weder HA-Optionen noch TLS-Schlüssel lesen. Keine Passwörter oder Kopplungsschlüssel in Docker-Metadaten/Logs. Automatisches Sitzungsende stoppt nur die Browser-App; temporäres Profil wird beim Neustart verworfen.
+- Tatsächliches Desktop-Bild über einen authentifizierten WebSocket in Chromium gerendert und per Screenshot visuell geprüft; darin ist Firefox mit der erneuerten Test-Verbindung sichtbar.
+- Browser-Schutz benötigt kein Host-Netzwerk, keinen Docker-/Supervisor-Zugriff und keine zusätzlichen Linux-Capabilities. Haupt-App mit Browser standardmäßig aus; bisherige direkte Anmeldung bleibt erhalten. App-ID und Datenpfade unverändert.
+- Kein echtes Google-/Goon-Konto verwendet und keine laufende HA-Installation oder lokale produktive Instanz neu gestartet. Die Google-Konto-Anmeldung und Supervisor-/AppArmor-Verhalten müssen auf dem HA-Zielgerät bestätigt werden; weiterhin `experimental`, nur amd64.
+
+Einrichtung: [Anmeldebrowser](goon_google_login/DOCS.md). Vor dem Update ein HA-Backup einschließlich Haupt-App erstellen. Die zusätzliche Browser-App nur bei Bedarf starten, Autostart und Watchdog aus lassen.
+
+Lokales Haupt-App-Paket: `goon-ha-local-0.3.0-e17b20d.tar.gz`, 50 Dateien einschließlich Herkunftsmanifest. SHA-256 `602d807de794d0c823e66749e024c425489b96bd945c40419d74b8c7b572af69`. Die optionale Browser-App separat über das HA-Repository installieren. Repository und entpacktes Paket vollständig redaktiert mit Gitleaks geprüft, ohne Funde.
+
 # Prüfstand 0.2.0 – 20. Oktober 2026
 
 ## Lokal erfolgreich geprüft

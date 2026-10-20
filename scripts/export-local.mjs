@@ -8,6 +8,7 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 export const wrapperFiles = [
   "config.json", ".dockerignore", "README.md", "DOCS.md", "CHANGELOG.md", "translations/de.json",
   "ha/options.mjs", "ha/database.mjs", "ha/bootstrap.mjs", "ha/entrypoint.mjs",
+  "ha/login-transport.mjs", "ha/login-bridge.mjs",
 ];
 
 export function allowedCorePath(path) {

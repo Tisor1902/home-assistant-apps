@@ -1,0 +1,12 @@
+{
+  "configuration": {
+    "goon_app_slug": { "name": "App-ID von Goon Calendar Sync", "description": "Vollständige HA-App-ID, normalerweise 8eef53e8_goon_calendar_sync; lokal local_goon_calendar_sync. Keine URL." },
+    "pairing_key": { "name": "Privater Browser-Kopplungsschlüssel", "description": "Derselbe lokal erzeugte Schlüssel mit 64 zufälligen Hex-Zeichen wie in Goon Calendar Sync. Nicht in Chat/GitHub teilen." },
+    "browser_origin": { "name": "HTTPS-Adresse dieses Browsers", "description": "Exakt die verwendete Adresse, z. B. https://ha.internal:3081, ohne Pfad. Bei geändertem Port anpassen." },
+    "browser_username": { "name": "Benutzername für das Browserfenster" },
+    "browser_password": { "name": "Passwort für das Browserfenster", "description": "Separates, nicht leeres Passwort ohne Steuerzeichen. Keine Längenvorgabe. Nicht das Google-Passwort." },
+    "session_minutes": { "name": "Maximale Laufzeit in Minuten", "description": "5 bis 120 Minuten. Danach stoppt die Browser-App. Autostart und Watchdog ausgeschaltet lassen." },
+    "timezone": { "name": "Zeitzone" }
+  },
+  "network": { "3001/tcp": "Passwortgeschütztes HTTPS-Browserfenster, nur LAN/VPN" }
+}

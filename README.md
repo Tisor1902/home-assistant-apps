@@ -14,9 +14,9 @@ https://github.com/Tisor1902/home-assistant-apps
 
 Alternativ: [Repository in Home Assistant hinzufügen](https://my.home-assistant.io/redirect/supervisor_addon_repository/?repository=https%3A%2F%2Fgithub.com%2FTisor1902%2Fhome-assistant-apps).
 
-Danach „Goon Calendar Sync“ auswählen und installieren. HA lädt das versionierte Image `ghcr.io/tisor1902/goon-calendar-sync-ha:0.2.0`. Kein GitHub-Token und kein lokaler Build erforderlich. **Noch nicht starten**, wenn eine bisherige Instanz denselben Kalender verwaltet. Vorher die Daten übernehmen und die alte Instanz stoppen.
+Danach „Goon Calendar Sync“ auswählen und installieren. HA lädt das versionierte Image `ghcr.io/tisor1902/goon-calendar-sync-ha:0.3.0`. Kein GitHub-Token und kein lokaler Build erforderlich. **Noch nicht starten**, wenn eine bisherige Instanz denselben Kalender verwaltet. Vorher die Daten übernehmen und die alte Instanz stoppen.
 
-Version **0.2.0** bringt den Anwendungsstand `e17b20d` mit Dark-Mode-Monatskalender, ICS-Import, Fortschritt/Fehlerdetails, verbessertem automatischem Kalenderabgleich und mehreren Benachrichtigungskanälen auf HA. Der optionale Google-Anmeldebrowser ist weiterhin nur für Unraid/Compose verpackt; auf HA bleibt die direkte Anmeldung über HTTPS oder einen separat eingerichteten Loopback-Tunnel.
+Version **0.3.0** ergänzt zum unveränderten Anwendungsstand `e17b20d` den optionalen **Goon Google-Anmeldebrowser** für HA OS. Damit funktioniert die feste Rückleitung `http://127.0.0.1:8080/oauth/google/callback` ohne eigene öffentliche Domain. Die zweite App nur zur Anmeldung starten und über einen privaten Schlüssel mit der Haupt-App koppeln. [Einrichtung des Anmeldebrowsers](goon_google_login/DOCS.md). Direkte Anmeldung bleibt standardmäßig aktiv.
 
 Beim ersten Veröffentlichen muss das GHCR-Paket separat auf **Public** gestellt und anonymes Herunterladen geprüft werden; die Sichtbarkeit des Repositorys allein genügt nicht.
 
@@ -24,7 +24,7 @@ Die vollständige Installations- und Umzugsanleitung steht in [goon_calendar_syn
 
 ## Lokales Paket als Alternative
 
-Die Release-Datei `goon-ha-local-0.2.0-e17b20d.tar.gz` kann weiterhin als lokale App installiert werden. HA baut sie selbst; Internet für das öffentliche Playwright-Basisimage und npm-Abhängigkeiten wird benötigt. Der Export entfernt dazu bewusst den `image`-Verweis aus der App-Konfiguration.
+Die Release-Datei `goon-ha-local-0.3.0-e17b20d.tar.gz` kann weiterhin als lokale Haupt-App installiert werden. HA baut sie selbst; Internet für das öffentliche Playwright-Basisimage und npm-Abhängigkeiten wird benötigt. Der Export entfernt dazu bewusst den `image`-Verweis aus der App-Konfiguration. Die optionale Browser-App separat über das Repository installieren.
 
 Das Paket enthält nur freigegebene Code-Dateien des fixierten Core-Commits und die HA-Verpackung. Keine Datenbank, keine echten Passwörter oder Tokens, keine Git-Historie. Ältere Release-Pakete bleiben als reproduzierbare Quellstände bestehen.
 
@@ -64,10 +64,13 @@ node --test test/*.test.mjs
 docker build -t goon-ha:test goon_calendar_sync
 node scripts/check-image.mjs goon-ha:test
 node scripts/smoke-container.mjs goon-ha:test
+docker build -f goon_google_login/Dockerfile -t goon-ha:test-browser .
+node scripts/check-browser-image.mjs goon-ha:test-browser
+node scripts/smoke-login-browser.mjs goon-ha:test goon-ha:test-browser
 ```
 
 Der Smoke-Test verwendet nur generierte Test-Zugangsdaten, isolierte temporäre Daten und `--network none`. Er prüft die Startsperre, HTTP-Anmeldung, Chromium ohne vergrößertes `/dev/shm`, Persistenz und geordnetes Herunterfahren. Er stoppt ausschließlich seine eigenen Testcontainer, nie die produktive Instanz.
 
-GitHub Actions führt Tests, Secret-Scan, Build, Image-Prüfung und Offline-Smoke-Test aus, bevor ein Image gepusht wird. Diese Tests ersetzen nicht den anschließenden Test mit Supervisor, HA-AppArmor, Goon und Google auf dem Zielgerät.
+GitHub Actions prüft Tests, Secret-Scan, beide Images, Neuinstallation, Upgrade und den Firefox-OAuth-Rückweg vor dem Push beider Komponenten. Der Browser-Test verwendet ein isoliertes internes Docker-Netz und synthetisches OAuth; der Anwendungstest läuft mit `--network none`. Diese Tests ersetzen nicht den anschließenden Test mit Supervisor, HA-AppArmor, Goon und Google auf dem Zielgerät.
 
 Grundlagen: [HA-App-Konfiguration](https://developers.home-assistant.io/docs/apps/configuration/), [lokales Testen/Installieren](https://developers.home-assistant.io/docs/apps/testing/).

@@ -26,6 +26,7 @@ export async function prepare({ dataDirectory = "/data", configDirectory = "/con
     ]);
     return {
       environment: environmentFor(options, { dataDirectory, secretFiles }), imported,
+      loginBridge: options.google_login_browser_enabled ? { pairingKey: options.google_login_pairing_key } : null,
       cleanup: () => rm(directory, { recursive: true, force: true }),
     };
   } catch (error) { await rm(directory, { recursive: true, force: true }); throw error; }

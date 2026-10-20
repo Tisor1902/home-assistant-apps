@@ -1,0 +1,10 @@
+**
+!goon_google_login/
+!goon_google_login/Dockerfile
+!goon_google_login/ha/
+!goon_google_login/ha/**
+!goon_google_login/root/
+!goon_google_login/root/**
+!goon_calendar_sync/
+!goon_calendar_sync/ha/
+!goon_calendar_sync/ha/login-transport.mjs

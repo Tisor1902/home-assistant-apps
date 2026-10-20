@@ -1,0 +1,38 @@
+{
+  "name": "Goon Google-Anmeldebrowser",
+  "version": "0.3.0-browser",
+  "slug": "goon_google_login",
+  "description": "Temporärer, geschützter Firefox für die Google-Anmeldung in Goon Calendar Sync auf HA OS.",
+  "url": "https://github.com/Tisor1902/home-assistant-apps/tree/main/goon_google_login",
+  "arch": ["amd64"],
+  "image": "ghcr.io/tisor1902/goon-calendar-sync-ha",
+  "startup": "application",
+  "boot": "manual",
+  "init": false,
+  "stage": "experimental",
+  "apparmor": true,
+  "tmpfs": true,
+  "timeout": 30,
+  "backup": "cold",
+  "ports": { "3001/tcp": 3081 },
+  "ports_description": { "3001/tcp": "Passwortgeschützter HTTPS-Anmeldebrowser; nur eigenes LAN/VPN" },
+  "webui": "https://[HOST]:[PORT:3001]/",
+  "options": {
+    "goon_app_slug": "8eef53e8_goon_calendar_sync",
+    "pairing_key": "",
+    "browser_origin": "",
+    "browser_username": "login",
+    "browser_password": "",
+    "session_minutes": 30,
+    "timezone": "Europe/Berlin"
+  },
+  "schema": {
+    "goon_app_slug": "str",
+    "pairing_key": "password",
+    "browser_origin": "str",
+    "browser_username": "str",
+    "browser_password": "password",
+    "session_minutes": "int(5,120)",
+    "timezone": "str"
+  }
+}

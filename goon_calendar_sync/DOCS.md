@@ -16,7 +16,7 @@ Die App-ID ist bei Repository-Installation `<Repository-Hash>_goon_calendar_sync
 
 Zugriff auf den HA-Ordner `addons` über Samba oder SSH. Aktuelle Samba-Versionen nennen die Freigaben `local_apps` und `app_configs`, ältere Versionen `addons` und `addon_configs`.
 
-1. Das lokale Paket `goon-ha-local-0.2.0-e17b20d.tar.gz` auf dem Laptop entpacken. Den Ordner `goon_calendar_sync` vollständig nach `/addons/` auf HA kopieren; über Samba in die Freigabe `local_apps` bzw. `addons`. Ergebnis: `/addons/goon_calendar_sync/config.json` und `Dockerfile`.
+1. Das lokale Paket `goon-ha-local-0.3.0-e17b20d.tar.gz` auf dem Laptop entpacken. Den Ordner `goon_calendar_sync` vollständig nach `/addons/` auf HA kopieren; über Samba in die Freigabe `local_apps` bzw. `addons`. Ergebnis: `/addons/goon_calendar_sync/config.json` und `Dockerfile`.
 2. In HA **Einstellungen → Apps → App installieren/App-Store → ⋮ → Nach Updates suchen**. Unter „Lokale Apps“ erscheint „Goon Calendar Sync“.
 3. Installieren. HA baut das Image selbst. Der erste Build lädt ein größeres Playwright-Basisimage; einige Minuten und mehrere GB freier Speicher sind sinnvoll. Kein GitHub-Passwort oder Token nötig.
 4. Noch **nicht starten**. Autostart ist zunächst aus. Im Reiter „Konfiguration“ Goon-Zugang sowie ein eigenes Web-Passwort eintragen. Für das Web-Passwort gibt es keine Längenvorgabe; auch ein Zeichen wird akzeptiert. Es darf nicht leer sein oder Zeilenumbrüche, Tabs und andere Steuerzeichen enthalten. Zugangsdaten niemals in Chat, GitHub oder Screenshots teilen.
@@ -25,7 +25,7 @@ Schutzmodus eingeschaltet lassen. Kein Host-Netzwerk und kein privilegierter Zug
 
 ### Bestehende HA-Installation aktualisieren
 
-Version 0.2.0 verwendet denselben App-Slug und `/data`. Vorher unter **Einstellungen → System → Backups** eine Sicherung einschließlich **Goon Calendar Sync** erstellen und den Wiederherstellungsschlüssel geschützt aufbewahren. Im App-Store nach Updates suchen und dann bei der bereits installierten App **Aktualisieren** wählen. Nicht deinstallieren und `import_existing_database` nicht für ein normales Update einschalten. Einstellungen, Adressen und Kalender-Zuordnungen werden weiterverwendet; neuere Tabellen legt die Anwendung selbst an.
+Version 0.3.0 verwendet denselben App-Slug und `/data`. Vorher unter **Einstellungen → System → Backups** eine Sicherung einschließlich **Goon Calendar Sync** erstellen und den Wiederherstellungsschlüssel geschützt aufbewahren. Im App-Store nach Updates suchen und dann bei der bereits installierten App **Aktualisieren** wählen. Nicht deinstallieren und `import_existing_database` nicht für ein normales Update einschalten. Einstellungen, Adressen und Kalender-Zuordnungen werden weiterverwendet; neuere Tabellen legt die Anwendung selbst an.
 
 Nach dem Update Web-Anmeldung, gespeicherte Dienste, Kalenderziel und letzten erfolgreichen Abruf kontrollieren. Die neue Version synchronisiert automatisch ohne einzelne Freigaben, entsprechend den aktivierten Zielen und dem GOON-Freigabestatus. Keine zweite Instanz am selben Kalender einschalten. Sollte das Upgrade fehlschlagen, über HA nur die betroffene App aus der **vor dem Update** erstellten Sicherung wiederherstellen; das ist eine bewusste Datenrücksetzung. Ein bloßer Image-Downgrade ist kein Ersatz für die gesicherte Datenbank. Das Update veröffentlicht weder eigene Zugangsdaten noch erzeugt es ein neues Kalenderziel.
 
@@ -60,11 +60,11 @@ Bei einem bereits gefüllten Kalender nicht blind eine zweite neue Instanz aktiv
 
 ## Google-Anmeldung und HTTPS
 
-Der zusätzliche Firefox-Anmeldebrowser des Hauptprojekts ist ausschließlich für Unraid/Compose eingerichtet, nicht für diese HA-App. Der HA-Start erzwingt weiterhin den direkten Google-Anmeldemodus. Kein zusätzlicher Browser-Port, Docker-Zugriff oder Host-Netzwerk wird dafür geöffnet.
+Ab 0.3.0 steht die zusätzliche HA-App **Goon Google-Anmeldebrowser** bereit. Sie ermöglicht die feste Loopback-Rückleitung über einen temporären Firefox auf HA, ohne öffentliche Domain. Beide Apps müssen ausdrücklich gekoppelt werden; [vollständige Einrichtung](../goon_google_login/DOCS.md). Der Browser-Modus ist standardmäßig aus, direkte Anmeldung bleibt erhalten. Keine zusätzlichen Rechte für Docker, Supervisor oder Host-Netzwerk erforderlich.
 
 Bereits gespeicherte gültige Google-Refresh-Tokens funktionieren grundsätzlich unabhängig von der Browser-Adresse weiter. Die Datenbank-Übernahme erhält sie; eine erneute Zustimmung kann bei widerrufenen/abgelaufenen Tokens trotzdem erforderlich werden.
 
-Eine **neue** Google-Anmeldung per OAuth funktioniert nicht einfach über eine beliebige private HTTP-IP wie `http://192.168.x.x:8098`. Für eine neue Anmeldung entweder:
+Eine **neue** Google-Anmeldung per OAuth funktioniert nicht einfach über eine beliebige private HTTP-IP wie `http://192.168.x.x:8098`. Den neuen Anmeldebrowser verwenden oder weiterhin eine der direkten Varianten:
 
 - Einen eigenen HTTPS-Zugang über eine feste Domain und einen korrekt konfigurierten Reverse Proxy verwenden. `public_base_url` auf genau diesen Ursprung setzen, etwa `https://dienstplan.example.de`. In Google exakt `https://dienstplan.example.de/oauth/google/callback` als Redirect-URI registrieren. Proxy muss Host/Protokoll korrekt weiterreichen. Die Option richtet selbst weder HTTPS noch einen Proxy ein.
 - Für die Einrichtung einen SSH-Tunnel auf einen lokalen Loopback-Port verwenden, die Oberfläche darüber öffnen und eine dazu passende `http://localhost:PORT/oauth/google/callback`-URI in Google registrieren. Das erfordert bereits eingerichteten SSH-Zugriff und wird separat gemeinsam konfiguriert.

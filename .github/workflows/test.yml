@@ -54,18 +54,35 @@ jobs:
         run: node scripts/check-image.mjs goon-ha:ci
       - name: Offline start, authentication, Chromium and persistence test
         run: node scripts/smoke-container.mjs goon-ha:ci
-      - name: Upgrade from published HA 0.1.2 without losing configuration or calendar links
+      - name: Upgrade from published HA 0.2.0 without losing configuration or calendar links
         run: |
-          docker pull ghcr.io/tisor1902/goon-calendar-sync-ha:0.1.2
-          node scripts/smoke-container.mjs goon-ha:ci ghcr.io/tisor1902/goon-calendar-sync-ha:0.1.2
+          docker pull ghcr.io/tisor1902/goon-calendar-sync-ha:0.2.0
+          node scripts/smoke-container.mjs goon-ha:ci ghcr.io/tisor1902/goon-calendar-sync-ha:0.2.0
+      - name: Build optional HA login browser
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: goon_google_login/Dockerfile
+          platforms: linux/amd64
+          load: true
+          push: false
+          tags: goon-ha:ci-browser
+          build-args: BUILD_VERSION=${{ steps.version.outputs.tag }}-browser
+          provenance: false
+      - name: Check browser image and isolated Firefox OAuth callback
+        run: |
+          node scripts/check-browser-image.mjs goon-ha:ci-browser
+          node scripts/smoke-login-browser.mjs goon-ha:ci goon-ha:ci-browser
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish tested image
+      - name: Publish both tested components
         env:
           VERSION: ${{ steps.version.outputs.tag }}
         run: |
           docker tag goon-ha:ci ghcr.io/tisor1902/goon-calendar-sync-ha:$VERSION
           docker push ghcr.io/tisor1902/goon-calendar-sync-ha:$VERSION
+          docker tag goon-ha:ci-browser ghcr.io/tisor1902/goon-calendar-sync-ha:$VERSION-browser
+          docker push ghcr.io/tisor1902/goon-calendar-sync-ha:$VERSION-browser
